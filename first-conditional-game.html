@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>First Conditional - Awesome Animals</title>
+<style>
+:root{--ink:#2b2350;--pink:#ff6b8b;--yellow:#ffd54f;--green:#4caf50;--blue:#42a5f5;--purple:#9c6ade}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Comic Sans MS','Chalkboard SE','Segoe UI',sans-serif}
+body{background:linear-gradient(160deg,#fff0f5,#e8f0ff 55%,#fffbe0);color:var(--ink);min-height:100vh;padding:14px;text-align:center}
+h1{font-size:clamp(1.5rem,5vw,2.4rem);color:#d81b60}
+.sub{margin:4px 0 10px}
+.bar{display:inline-block;background:#fff;border:3px solid var(--yellow);border-radius:30px;padding:6px 18px;font-weight:bold;margin-bottom:12px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:760px;margin:0 auto 14px}
+.tile{border:4px solid;border-radius:22px;padding:14px 8px;font-size:1.05rem;font-weight:bold;cursor:pointer;background:#fff;transition:transform .2s}
+.tile:hover{transform:translateY(-5px) rotate(-2deg)}
+.tile .em{font-size:2.4rem;display:block}
+.tile.done{background:#e8f5e9}
+.t1{border-color:var(--pink)}.t2{border-color:var(--blue)}.t3{border-color:var(--green)}.t4{border-color:var(--purple)}
+.panel{display:none;max-width:760px;margin:0 auto;background:#fff;border:4px solid var(--purple);border-radius:26px;padding:18px;animation:pop .4s}
+.panel.on{display:block}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes bounce{40%{transform:translateY(-14px)}}
+h2{margin-bottom:8px}
+.q{font-size:1.2rem;margin:10px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0;min-height:46px}
+.chip,.opt{background:#fff8e1;border:3px solid var(--yellow);border-radius:14px;padding:8px 14px;font-size:1.1rem;cursor:pointer}
+.chip:hover,.opt:hover{background:#ffecb3}
+.slot{min-height:56px;border:3px dashed var(--pink);border-radius:16px;padding:8px;background:#fff5f8}
+.opt{display:block;width:100%;margin:8px 0}
+.ok{background:#c8f7c5!important;border-color:var(--green)!important;animation:bounce .5s}
+.no{background:#ffd0d0!important;border-color:#e53935!important;animation:shake .4s}
+.sel{background:#d6ebff!important;border-color:var(--blue)!important}
+.go{background:var(--pink);color:#fff;border:0;border-radius:24px;padding:10px 24px;font-size:1.1rem;cursor:pointer;margin:8px 4px}
+.go.b{background:var(--purple)}
+.fb{min-height:28px;font-weight:bold;font-size:1.1rem;margin:6px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+footer{margin-top:18px;font-size:.9rem}
+.big{font-size:4rem;animation:bounce 1s infinite}
+</style>
+</head>
+<body>
+<h1>🦁 First Conditional Challenge 🐦</h1>
+<p class="sub">Grade 7 • Awesome Animals • Lesson 3, part 1</p>
+<div class="bar">⭐ Score: <span id="sc">0</span> / 16</div>
+
+<div id="menu" class="menu">
+  <div class="tile t1" id="m0" onclick="openG(0)"><span class="em">🧩</span>Build It!</div>
+  <div class="tile t2" id="m1" onclick="openG(1)"><span class="em">🔗</span>Match It!</div>
+  <div class="tile t3" id="m2" onclick="openG(2)"><span class="em">❓</span>Quick Quiz</div>
+  <div class="tile t4" id="m3" onclick="openG(3)"><span class="em">🔍</span>Fix It!</div>
+</div>
+
+<div id="rule" class="panel on" style="border-color:var(--yellow)">
+  <h2>📘 Remember</h2>
+  <p class="q"><b>If + present simple, will / won't + verb</b></p>
+  <p class="q">If you <b style="color:green">come</b> with us, you<b style="color:#d81b60">'ll be</b> with the best animals.</p>
+  <p>It talks about real and possible future situations. Pick a game to start! (Play in any order.)</p>
+</div>
+
+<div id="g" class="panel"></div>
+<div id="end" class="panel"></div>
+
+<footer>Khawlah Bint Thalabah (5-9) &nbsp;|&nbsp; Created by T.Badria Alfalahi ❤️</footer>
+
+<script>
+var score=0,doneSet={},cur=-1,idx=0,got=0;
+var AC=null;
+function snd(f,d,t){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.type=t||'sine';o.frequency.value=f;o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.2,AC.currentTime);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+function good(){snd(660,.15);setTimeout(function(){snd(880,.25)},120)}
+function bad(){snd(200,.3,'sawtooth')}
+function add(){score++;document.getElementById('sc').textContent=score}
+function $(i){return document.getElementById(i)}
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+
+var BUILD=[
+ "If you come with us, you'll be with the best animals.",
+ "If I don't join the fish, they'll be angry.",
+ "If I join the lions, the birds won't be happy.",
+ "Will you join the birds if I don't go?"];
+var PAIRS=[["If you join,","they will be happy."],["If I don't go,","the lions will be angry."],["If she comes,","we won't be sad."],["If the lion roars,","the birds will fly away."]];
+var QUIZ=[
+ ["If you ___ with us, you'll be with the best animals.",["come","will come","came"],0],
+ ["If I ___ the lions, the birds won't be happy.",["joined","join","will join"],1],
+ ["The first conditional talks about ___ future situations.",["impossible","past","real and possible"],2],
+ ["Which pattern is correct?",["If + will + verb, present simple","If + present simple, will + verb","If + past simple, would + verb"],1],
+ ["If he ___, he will be happy.",["joins","join","will join"],0]];
+var FIX=[
+ ["If she comes, we will be happy.","If she come, we will be happy."],
+ ["If I don't go, the lions will be angry.","If I won't go, the lions will be angry."],
+ ["If I join the lions, the birds won't be happy.","If I will join the lions, the birds won't be happy."]];
+var LEN=[BUILD.length,PAIRS.length,QUIZ.length,FIX.length];
+
+function openG(n){cur=n;idx=0;got=0;$('rule').classList.remove('on');$('end').classList.remove('on');$('g').classList.add('on');
+ if(n==0)build();else if(n==1)match();else if(n==2)quiz();else fix()}
+function head(t,s){return '<h2>'+t+'</h2><p>'+s+'</p>'}
+function next(){idx++;if(idx>=LEN[cur]){finish()}else[build,match,quiz,fix][cur]()}
+function finish(){doneSet[cur]=1;$('m'+cur).classList.add('done');$('g').classList.remove('on');
+ var all=Object.keys(doneSet).length==4;
+ var stars=score>=14?'⭐⭐⭐':score>=10?'⭐⭐':'⭐';
+ $('end').innerHTML='<div class="big">'+(all?'🏆':'🎉')+'</div><h2>'+(all?'You finished all the games!':'Game complete!')+'</h2><p class="q">Score: '+score+' / 16 '+stars+'</p><p>'+(all?'You are a First Conditional star!':'Pick another game from the menu.')+'</p><button class="go" onclick="back()">Back to menu</button>'+(all?'<button class="go b" onclick="location.reload()">Play again</button>':'');
+ $('end').classList.add('on');if(all){[523,659,784,1047].forEach(function(f,i){setTimeout(function(){snd(f,.25)},i*160)})}}
+function back(){$('end').classList.remove('on');$('rule').classList.add('on')}
+
+/* 1 Build */
+var built=[];
+function build(){var s=BUILD[idx],w=shuf(s.split(' '));built=[];
+ $('g').innerHTML=head('🧩 Build It! ('+(idx+1)+'/4)','Tap the words in the right order.')+'<div class="slot chips" id="sl"></div><div class="chips" id="pool"></div><div class="fb" id="fb"></div><button class="go" onclick="chkB()">Check ✔</button><button class="go b" onclick="build()">Reset</button>';
+ var p=$('pool');w.forEach(function(x){var b=document.createElement('span');b.className='chip';b.textContent=x;b.onclick=function(){if(b.parentNode==p){$('sl').appendChild(b)}else{p.appendChild(b)}snd(440,.08)};p.appendChild(b)})}
+function chkB(){var t=[].map.call($('sl').children,function(c){return c.textContent}).join(' ');var ok=t==BUILD[idx];
+ if(ok){good();add();$('fb').textContent='🎉 Great!';$('sl').classList.add('ok');setTimeout(next,1100)}else{bad();$('fb').textContent='Try again! Check the order: If + present simple, will + verb.';$('sl').classList.add('no');setTimeout(function(){$('sl').classList.remove('no')},500)}}
+
+/* 2 Match */
+var mSel=null,mDone=0;
+function match(){mDone=0;mSel=null;idx=0;LEN[1]=1;
+ var L=PAIRS.map(function(p,i){return [p[0],i]}),R=shuf(PAIRS.map(function(p,i){return [p[1],i]}));
+ var h=head('🔗 Match It! (If-clause + Result)','Tap an If-clause, then its result.')+'<div class="cols"><div id="cl"></div><div id="cr"></div></div><div class="fb" id="fb"></div>';
+ $('g').innerHTML=h;
+ L.forEach(function(x){mk('cl',x,'L')});R.forEach(function(x){mk('cr',x,'R')})}
+function mk(id,x,side){var b=document.createElement('button');b.className='opt';b.textContent=x[0];b.dataset.i=x[1];b.dataset.s=side;
+ b.onclick=function(){if(b.classList.contains('ok'))return;
+  if(side=='L'){[].forEach.call(document.querySelectorAll('#cl .opt'),function(e){e.classList.remove('sel')});b.classList.add('sel');mSel=b;snd(440,.08)}
+  else if(mSel){if(mSel.dataset.i==b.dataset.i){mSel.className='opt ok';b.className='opt ok';mSel=null;good();add();mDone++;if(mDone==4){$('fb').textContent='🎉 All matched!';setTimeout(function(){LEN[1]=PAIRS.length;idx=LEN[1];finish()},1000)}}
+   else{bad();b.classList.add('no');setTimeout(function(){b.classList.remove('no')},450)}}};
+ $(id).appendChild(b)}
+
+/* 3 Quiz */
+function quiz(){var q=QUIZ[idx];
+ $('g').innerHTML=head('❓ Quick Quiz ('+(idx+1)+'/5)','Choose the correct answer.')+'<p class="q">'+q[0]+'</p><div id="op"></div><div class="fb" id="fb"></div>';
+ ask(q[1],q[2])}
+function ask(opts,c){var d=$('op'),lock=false;opts.forEach(function(t,i){var b=document.createElement('button');b.className='opt';b.textContent=t;
+ b.onclick=function(){if(lock)return;if(i==c){lock=true;b.classList.add('ok');good();add();$('fb').textContent='🎉 Correct!';setTimeout(next,1000)}else{b.classList.add('no');bad();$('fb').textContent='Not this one. Try again!'}};d.appendChild(b)})}
+
+/* 4 Fix */
+function fix(){var f=FIX[idx],o=shuf([[f[0],0],[f[1],1]]);
+ $('g').innerHTML=head('🔍 Fix It! ('+(idx+1)+'/3)','Which sentence is correct?')+'<div id="op"></div><div class="fb" id="fb"></div>';
+ var d=$('op'),lock=false;o.forEach(function(x){var b=document.createElement('button');b.className='opt';b.textContent=x[0];
+ b.onclick=function(){if(lock)return;if(x[1]==0){lock=true;b.classList.add('ok');good();add();$('fb').textContent='🎉 Yes! No "will" in the if-clause.';setTimeout(next,1300)}else{b.classList.add('no');bad();$('fb').textContent='Look at the verb in the if-clause. Try again!'}};d.appendChild(b)})}
+</script>
+</body>
+</html>
